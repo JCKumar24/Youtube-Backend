@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const userModel = require("./models/user");
+const User = require("./models/user");
 
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -15,6 +16,11 @@ app.get("/read", async (req, res) => {
     let users = await userModel.find();
     res.render("read", {users});
 });
+app.get("/delete/:id", async (req, res) => {
+    let users = await userModel.findOneAndDelete({_id: req.params.id});
+    res.redirect("/read");
+});
+
 app.post("/create", async (req, res) => {
     let {name, email, image} = req.body;
     let createUser = await userModel.create({
